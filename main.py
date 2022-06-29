@@ -66,12 +66,7 @@ def __(s):
     return LANGS_FILE[s][LANG]
 
 
-def crop_center(pil_img, crop_width, crop_height):
-    img_width, img_height = pil_img.size
-    return pil_img.crop(((img_width - crop_width) // 2,
-                         (img_height - crop_height) // 2,
-                         (img_width + crop_width) // 2,
-                         (img_height + crop_height) // 2))
+
 
 
 @dp.message_handler(regexp=r"^(http(s)?:\/\/)?((w){3}.)?youtu(be|.be)?(\.com)?\/.+")
@@ -191,13 +186,7 @@ async def get_track(event: types.Message):
                 tmp_artist_track.append(c['name'])
             tmp_date = tmp_track['release_date'].split('-')
             tmp_date = tmp_date[2] + '/' + tmp_date[1] + '/' + tmp_date[0]
-            await event.answer_photo(tmp_cover,
-                                     caption=('<b>Track: {}</b>'
-                                              '\n{} - {}\n<a href="{}">' + __('album_link')
-                                              + '</a>\n<a href="{}">' + __('track_link') + '</a>')
-                                     .format(
-                                         tmp_track['title'], tmp_track['artist']['name'],
-                                         tmp_date, tmp_track['album']['link'], tmp_track['link']), parse_mode='HTML'
+           
                                      )
 
             # Delete user message
@@ -206,11 +195,7 @@ async def get_track(event: types.Message):
             tmp_song = open(dl.song_path, 'rb')
             duration = int(MP3(tmp_song).info.length)
             tmp_song.seek(0)
-            await event.answer_audio(tmp_song,
-                                     title=tmp_track['title'],
-                                     performer=', '.join(tmp_artist_track),
-                                     duration=duration,
-                                     disable_notification=True)
+            
             await tmp_msg.delete()
             tmp_song.close()
             try:
@@ -239,7 +224,7 @@ async def get_album(event: types.Message):
         tmp = event.text
         if tmp[-1] == '/':
             tmp = tmp[:-1]
-        tmp_msg = await event.answer(__('downloading'))
+        tmp_msg = await event.answer(__('LOADING AWESOMENESS'))
         downloading_users.append(event.from_user.id)
         try:
             try:
@@ -272,13 +257,7 @@ async def get_album(event: types.Message):
                 tmp_artists.append(tmp_artist_track)
             tmp_date = album['release_date'].split('-')
             tmp_date = tmp_date[2] + '/' + tmp_date[1] + '/' + tmp_date[0]
-            await event.answer_photo(tmp_cover,
-                                     caption=('<b>Album: {}</b>\n{} - {}\n<a href="{}">' + __('album_link') + '</a>')
-                                     .format(
-                                         album['title'], album['artist']['name'],
-                                         tmp_date, album['link']
-                                     ),
-                                     parse_mode='HTML')
+           
 
             # Delete user message
             await event.delete()
@@ -356,7 +335,7 @@ async def get_playlist(event: types.Message):
         tmp = event.text
         if tmp[-1] == '/':
             tmp = tmp[:-1]
-        tmp_msg = await event.answer(__('downloading'))
+        tmp_msg = await event.answer(__('LOADING AWESOMENESS'))
         downloading_users.append(event.from_user.id)
         try:
             try:
@@ -390,14 +369,7 @@ async def get_playlist(event: types.Message):
             tmp_count = 0
             tmp_date = album['creation_date'].split(' ')[0].split('-')
             tmp_date = tmp_date[2] + '/' + tmp_date[1] + '/' + tmp_date[0]
-            await event.answer_photo(tmp_cover,
-                                     caption=('<b>Playlist: {}</b>\n{} - {}\n<a href="{}">'
-                                              + __('playlist_link') + '</a>').format(album['title'],
-                                                                                     album['creator']['name'],
-                                                                                     tmp_date,
-                                                                                     album['link']
-                                                                                     ),
-                                     parse_mode='HTML')
+            
 
             # Delete user message
             await event.delete()
